@@ -1,2 +1,3 @@
 rootProject.name = "SlideshowBackground"
 include ':app'
+include ':SlideshowBackground'
