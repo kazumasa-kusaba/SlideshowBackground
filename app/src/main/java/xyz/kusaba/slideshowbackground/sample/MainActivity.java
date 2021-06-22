@@ -1,4 +1,4 @@
-package xyz.kusaba.slideshowbackground;
+package xyz.kusaba.slideshowbackground.sample;
 
 import androidx.appcompat.app.AppCompatActivity;
 
