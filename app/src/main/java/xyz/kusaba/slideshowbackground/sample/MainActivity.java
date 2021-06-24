@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import xyz.kusaba.slideshowbackground.SlideshowBackground;
 
 public class MainActivity extends AppCompatActivity {
@@ -13,6 +16,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SlideshowBackground slideshowBackground;
+        List<Integer> resIdList = new ArrayList<>();
+        resIdList.add(R.drawable.sample_picture_00);
+        resIdList.add(R.drawable.sample_picture_01);
+        resIdList.add(R.drawable.sample_picture_02);
+        resIdList.add(R.drawable.sample_picture_03);
+        resIdList.add(R.drawable.sample_picture_04);
+
+        SlideshowBackground slideshowBackground = this.findViewById(R.id.slideshowBackground);
+        slideshowBackground.setData(this.getResources(), resIdList);
+        slideshowBackground.start();
     }
 }
