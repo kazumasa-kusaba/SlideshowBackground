@@ -11,11 +11,67 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+public class SlideshowBackground extends SurfaceView implements SurfaceHolder.Callback, Runnable {
+    private SlideshowBackgroundState state = null;
+
+    public SlideshowBackground(Context context) {
+        super(context);
+        state = new SlideshowBackgroundStateInit();
+    }
+    public SlideshowBackground(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+    public SlideshowBackground(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder surfaceHolder) { }
+    @Override
+    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) { }
+    @Override
+    public void surfaceDestroyed(SurfaceHolder surfaceHolder) { }
+
+    public void append(Resources resources, int resourceId) {
+        // TODO: write here
+    }
+
+    public void setSpeed(int pixel) {
+        // TODO: write here
+    }
+
+    public void setRandomPlayback(boolean isRandom) {
+        // TODO: write here
+    }
+
+    public void play() {
+        // TODO: write here
+    }
+
+    public void pause() {
+        // TODO: write here
+    }
+
+    public void stop() {
+        // TODO: write here
+    }
+
+    public void changeState(SlideshowBackgroundState rhs) {
+        state = rhs;
+    }
+
+    @Override
+    public void run() { }
+}
+
+/*
 public class SlideshowBackground extends SurfaceView implements SurfaceHolder.Callback, Runnable {
     private boolean flagSetData = false;
     private boolean flagRequestReset = false;
@@ -173,3 +229,4 @@ public class SlideshowBackground extends SurfaceView implements SurfaceHolder.Ca
         }
     }
 }
+*/
