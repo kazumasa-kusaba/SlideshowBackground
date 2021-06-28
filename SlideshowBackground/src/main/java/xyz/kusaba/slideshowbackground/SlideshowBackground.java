@@ -20,16 +20,25 @@ import java.util.Random;
 
 public class SlideshowBackground extends SurfaceView implements SurfaceHolder.Callback, Runnable {
     private SlideshowBackgroundState state = null;
+    private SurfaceHolder surfaceHolder = getHolder();
+    private Thread thread = new Thread(this);
+    private List<ResourceInfo> resourceInfoList = new ArrayList<ResourceInfo>();
+    private int speed = 5;
+    private boolean isRandomPlayback = false;
+    private boolean isFlowing = false;
+    private List<ImageOnScreen> imageOnScreenList = new ArrayList<ImageOnScreen>();
 
     public SlideshowBackground(Context context) {
         super(context);
-        state = new SlideshowBackgroundStateInit();
+        init();
     }
     public SlideshowBackground(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
     public SlideshowBackground(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        init();
     }
 
     @Override
@@ -40,127 +49,134 @@ public class SlideshowBackground extends SurfaceView implements SurfaceHolder.Ca
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) { }
 
     public void append(Resources resources, int resourceId) {
-        // TODO: write here
+        state.append(this, resources, resourceId);
     }
 
-    public void setSpeed(int pixel) {
-        // TODO: write here
+    public void setFlowSpeed(int pixel) {
+        state.setSpeed(this, pixel);
     }
 
     public void setRandomPlayback(boolean isRandom) {
-        // TODO: write here
+        state.setRandomPlayback(this, isRandom);
     }
 
     public void play() {
-        // TODO: write here
+        state.play(this);
     }
 
     public void pause() {
-        // TODO: write here
+        state.pause(this);
     }
 
     public void stop() {
-        // TODO: write here
+        state.stop(this);
     }
 
-    public void changeState(SlideshowBackgroundState rhs) {
-        state = rhs;
+    public void changeState(SlideshowBackgroundState state) {
+        this.state = state;
     }
 
-    @Override
-    public void run() { }
-}
-
-/*
-public class SlideshowBackground extends SurfaceView implements SurfaceHolder.Callback, Runnable {
-    private boolean flagSetData = false;
-    private boolean flagRequestReset = false;
-    private SurfaceHolder surfaceHolder;
-    private Thread thread = null;
-    private Resources res = null;
-    private List<Integer> resIdList = new ArrayList<>();
-    private class ImageOnScreen {
-        Bitmap bitmap = null;
-        Rect rect = new Rect();
-    }
-    private List<ImageOnScreen> imageOnScreenList = new ArrayList<>();
-
-    public SlideshowBackground(Context context) {
-        super(context);
-    }
-    public SlideshowBackground(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-    public SlideshowBackground(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public void addResourceInfoToList(ResourceInfo resourceInfo) {
+        resourceInfoList.add(resourceInfo);
     }
 
-    @Override
-    public void surfaceCreated(SurfaceHolder surfaceHolder) { }
-    @Override
-    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) { }
-    @Override
-    public void surfaceDestroyed(SurfaceHolder surfaceHolder) { }
-
-    public void setData(Resources res, List<Integer> resIdList) {
-        this.res = res;
-        this.resIdList = resIdList;
-        surfaceHolder = getHolder();
-        surfaceHolder.addCallback(this);
-        flagSetData = true;
-        thread = new Thread(this);
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
 
-    public boolean start() {
-        if (flagSetData) {
-            thread.start();
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    public boolean reset() {
-        if (flagSetData) {
-            setFlagRequestReset(true);
-            return true;
-        }
-        else {
-            return false;
-        }
+    public void setIsRandomPlayback(boolean isRandomPlayback) {
+        this.isRandomPlayback = isRandomPlayback;
     }
 
     @Override
     public void run() {
         while (true) {
+            if (!isFlowing) {
+                continue;
+            }
+
             try {
-                slideImagesToLeft(imageOnScreenList, 5);
-                addImagesToScreen(imageOnScreenList);
-                deleteImagesOnScreen(imageOnScreenList);
-                drawScreen(imageOnScreenList);
-                Thread.sleep(16);
-                resetImageOnScreenList(imageOnScreenList);
+                slideImages();
+                addImagesToScreen();
+                deleteImagesOnScreen();
+                updateScreen();
+                Thread.sleep(16); // 60fps
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private void slideImagesToLeft(List<ImageOnScreen> imageOnScreenList, int step) {
+    private void init() {
+        state = new SlideshowBackgroundStateInit();
+        surfaceHolder.addCallback(this);
+        state = new SlideshowBackgroundStateStop();
+        thread.start();
+
+        // test
+        state = new SlideshowBackgroundStatePlay();
+        isFlowing = true;
+    }
+
+    private void slideImages() {
         if (imageOnScreenList.size() == 0) {
-            // if there are no images on screen, nothing to do.
+            // if images are not registered, nothing to do.
             return;
         }
+        // MEMO: can this code use iterator?
         for (int i = 0; i < imageOnScreenList.size(); i++) {
             ImageOnScreen imageOnScreen = imageOnScreenList.get(i);
-            imageOnScreen.rect.left -= step;
-            imageOnScreen.rect.right -= step;
+            imageOnScreen.rect.left += speed;
+            imageOnScreen.rect.right += speed;
             imageOnScreenList.set(i, imageOnScreen);
         }
     }
 
-    private void addImagesToScreen(List<ImageOnScreen> imageOnScreenList) {
+    private void addImagesToScreen() {
+        // right flow
+        if (speed > 0) {
+            addImagesToScreenWhileRightFlow();
+        }
+        // left flow
+        else if (speed < 0) {
+            addImagesToScreenWhileLeftFlow();
+        }
+    }
+
+    // TODO: refactor the following methods
+    //       * addImagesToScreenWhileRightFlow
+    //       * addImagesToScreenWhileLeftFlow
+
+    // TODO: fix the following methods
+    //       if the flow direction is changed, an error occurs
+    //       the methods can not add images properly
+
+    private void addImagesToScreenWhileRightFlow() {
+        int edgeXPosOfImages;
+        if (imageOnScreenList.size() == 0) {
+            edgeXPosOfImages = this.getWidth();
+        }
+        else {
+            ImageOnScreen lastImageOnScreen = imageOnScreenList.get(imageOnScreenList.size() - 1);
+            edgeXPosOfImages = lastImageOnScreen.rect.left;
+        }
+
+        while (0 < edgeXPosOfImages) {
+            Random random = new Random();
+            int randomVal = random.nextInt(resourceInfoList.size());
+            ImageOnScreen imageOnScreen = new ImageOnScreen();
+            imageOnScreen.bitmap = BitmapFactory.decodeResource(resourceInfoList.get(randomVal).resources, resourceInfoList.get(randomVal).resourceId);
+            imageOnScreen.rect.top = 0;
+            imageOnScreen.rect.bottom = this.getHeight();
+            imageOnScreen.rect.left = imageOnScreen.rect.right - (int)(imageOnScreen.bitmap.getWidth() * ((float)imageOnScreen.rect.bottom) / imageOnScreen.bitmap.getHeight());
+            imageOnScreen.rect.right = edgeXPosOfImages;
+            imageOnScreenList.add(imageOnScreen);
+            ImageOnScreen lastImageOnScreen = imageOnScreenList.get(imageOnScreenList.size() - 1);
+            edgeXPosOfImages = lastImageOnScreen.rect.left;
+        }
+    }
+
+    private void addImagesToScreenWhileLeftFlow() {
         int edgeXPosOfImages;
         if (imageOnScreenList.size() == 0) {
             edgeXPosOfImages = 0;
@@ -171,9 +187,10 @@ public class SlideshowBackground extends SurfaceView implements SurfaceHolder.Ca
         }
 
         while (edgeXPosOfImages < this.getWidth()) {
-            ImageOnScreen imageOnScreen = new ImageOnScreen();
             Random random = new Random();
-            imageOnScreen.bitmap = BitmapFactory.decodeResource(res, resIdList.get(random.nextInt(resIdList.size())));
+            int randomVal = random.nextInt(resourceInfoList.size());
+            ImageOnScreen imageOnScreen = new ImageOnScreen();
+            imageOnScreen.bitmap = BitmapFactory.decodeResource(resourceInfoList.get(randomVal).resources, resourceInfoList.get(randomVal).resourceId);
             imageOnScreen.rect.left = edgeXPosOfImages;
             imageOnScreen.rect.top = 0;
             imageOnScreen.rect.bottom = this.getHeight();
@@ -184,17 +201,22 @@ public class SlideshowBackground extends SurfaceView implements SurfaceHolder.Ca
         }
     }
 
-    private void deleteImagesOnScreen(List<ImageOnScreen> imageOnScreenList) {
+    private void deleteImagesOnScreen() {
         Iterator<ImageOnScreen> imageOnScreenIterator = imageOnScreenList.iterator();
-        while(imageOnScreenIterator.hasNext()){
+        while (imageOnScreenIterator.hasNext()){
             ImageOnScreen imageOnScreen = imageOnScreenIterator.next();
-            if (imageOnScreen.rect.right < 0) {
+            // right flow
+            if (0 < speed && this.getWidth() < imageOnScreen.rect.left) {
+                imageOnScreenIterator.remove();
+            }
+            // left flow
+            else if (speed < 0 && imageOnScreen.rect.right < 0) {
                 imageOnScreenIterator.remove();
             }
         }
     }
 
-    private void drawScreen(List<ImageOnScreen> imageOnScreenList) {
+    private void updateScreen() {
         Canvas canvas = surfaceHolder.lockCanvas();
         if (canvas == null) {
             return;
@@ -209,24 +231,4 @@ public class SlideshowBackground extends SurfaceView implements SurfaceHolder.Ca
 
         surfaceHolder.unlockCanvasAndPost(canvas);
     }
-
-    private void resetImageOnScreenList(List<ImageOnScreen> imageOnScreenList) {
-        if (getFlagRequestReset()) {
-            imageOnScreenList.clear();
-            setFlagRequestReset(false);
-        }
-    }
-
-    private void setFlagRequestReset(boolean rhs) {
-        synchronized(this) {
-            flagRequestReset = rhs;
-        }
-    }
-
-    private boolean getFlagRequestReset() {
-        synchronized(this) {
-            return flagRequestReset;
-        }
-    }
 }
-*/
