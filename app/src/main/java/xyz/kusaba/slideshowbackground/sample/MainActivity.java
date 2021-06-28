@@ -31,5 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
         SlideshowBackground slideshowBackground = this.findViewById(R.id.slideshowBackground);
         slideshowBackground.append(this.getResources(), R.drawable.sample_picture_00);
+        slideshowBackground.append(this.getResources(), R.drawable.sample_picture_01);
+        slideshowBackground.append(this.getResources(), R.drawable.sample_picture_02);
+        slideshowBackground.append(this.getResources(), R.drawable.sample_picture_03);
+        slideshowBackground.append(this.getResources(), R.drawable.sample_picture_04);
     }
 }
