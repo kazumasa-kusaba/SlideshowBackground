@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /*
         List<Integer> resIdList = new ArrayList<>();
         resIdList.add(R.drawable.sample_picture_00);
         resIdList.add(R.drawable.sample_picture_01);
@@ -26,5 +27,9 @@ public class MainActivity extends AppCompatActivity {
         SlideshowBackground slideshowBackground = this.findViewById(R.id.slideshowBackground);
         slideshowBackground.setData(this.getResources(), resIdList);
         slideshowBackground.start();
+        */
+
+        SlideshowBackground slideshowBackground = this.findViewById(R.id.slideshowBackground);
+        slideshowBackground.append(this.getResources(), R.drawable.sample_picture_00);
     }
 }
