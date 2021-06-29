@@ -33,6 +33,7 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
     private int speed = 5;
     private boolean isRandomPlayback = false;
     private boolean isFlowing = false;
+    private int imageOnScreenListIndex = 0;
     private List<ImageOnScreen> imageOnScreenList = new ArrayList<ImageOnScreen>();
 
     public SlideshowBackgroundThread() {
@@ -204,10 +205,18 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
         }
 
         while (0 < leftOfLeftmostImage) {
-            Random random = new Random();
-            int randomVal = random.nextInt(resourceInfoList.size());
+            if (isRandomPlayback) {
+                Random random = new Random();
+                int randomVal = random.nextInt(resourceInfoList.size());
+                imageOnScreenListIndex = randomVal;
+            } else {
+                imageOnScreenListIndex++;
+                if (resourceInfoList.size() <= imageOnScreenListIndex) {
+                    imageOnScreenListIndex = 0;
+                }
+            }
             ImageOnScreen imageOnScreen = new ImageOnScreen();
-            imageOnScreen.bitmap = BitmapFactory.decodeResource(resourceInfoList.get(randomVal).resources, resourceInfoList.get(randomVal).resourceId);
+            imageOnScreen.bitmap = BitmapFactory.decodeResource(resourceInfoList.get(imageOnScreenListIndex).resources, resourceInfoList.get(imageOnScreenListIndex).resourceId);
             imageOnScreen.rect.top = 0;
             imageOnScreen.rect.bottom = context.getResources().getDisplayMetrics().heightPixels;
             imageOnScreen.rect.right = leftOfLeftmostImage;
@@ -242,10 +251,18 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
         }
 
         while (rightOfRightmostImage < context.getResources().getDisplayMetrics().widthPixels) {
-            Random random = new Random();
-            int randomVal = random.nextInt(resourceInfoList.size());
+            if (isRandomPlayback) {
+                Random random = new Random();
+                int randomVal = random.nextInt(resourceInfoList.size());
+                imageOnScreenListIndex = randomVal;
+            } else {
+                imageOnScreenListIndex++;
+                if (resourceInfoList.size() <= imageOnScreenListIndex) {
+                    imageOnScreenListIndex = 0;
+                }
+            }
             ImageOnScreen imageOnScreen = new ImageOnScreen();
-            imageOnScreen.bitmap = BitmapFactory.decodeResource(resourceInfoList.get(randomVal).resources, resourceInfoList.get(randomVal).resourceId);
+            imageOnScreen.bitmap = BitmapFactory.decodeResource(resourceInfoList.get(imageOnScreenListIndex).resources, resourceInfoList.get(imageOnScreenListIndex).resourceId);
             imageOnScreen.rect.left = rightOfRightmostImage;
             imageOnScreen.rect.top = 0;
             imageOnScreen.rect.bottom = context.getResources().getDisplayMetrics().heightPixels;
