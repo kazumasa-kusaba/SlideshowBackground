@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.SeekBar;
 import android.widget.Switch;
 
 import xyz.kusaba.slideshowbackground.SlideshowBackground;
@@ -57,6 +58,20 @@ public class MainActivity extends AppCompatActivity {
                     slideshowBackground.setRandomPlayback(false);
                 }
             }
+        });
+
+        SeekBar seekBarSpeed = this.findViewById(R.id.seekBarFlowSpeed);
+        seekBarSpeed.setProgress(5);
+        seekBarSpeed.setMax(20);
+        seekBarSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                slideshowBackground.setFlowSpeed(progress);
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
         });
     }
 }
