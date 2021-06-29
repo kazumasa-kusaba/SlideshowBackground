@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
     tools:context=".MainActivity">
 
     <xyz.kusaba.slideshowbackground.SlideshowBackground
@@ -29,7 +30,7 @@
         android:id="@+id/buttonPlay"
         android:layout_width="150sp"
         android:layout_height="70sp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="50dp"
         android:text="PLAY"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +42,7 @@
         android:id="@+id/buttonPause"
         android:layout_width="150sp"
         android:layout_height="70sp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="50dp"
         android:text="PAUSE"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,11 +53,37 @@
         android:id="@+id/buttonStop"
         android:layout_width="150sp"
         android:layout_height="70sp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="50dp"
         android:text="STOP"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonPause" />
+
+    <Switch
+        android:id="@+id/switchRandom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:shadowColor="#FFFFFF"
+        android:text="Random"
+        android:textColor="#FFFFFF"
+        android:textColorHighlight="#FF5722"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonStop" />
+
+    <SeekBar
+        android:id="@+id/seekBarFlowSpeed"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginRight="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/slideshowBackground"
+        app:layout_constraintTop_toBottomOf="@+id/switchRandom" />
 </androidx.constraintlayout.widget.ConstraintLayout>
