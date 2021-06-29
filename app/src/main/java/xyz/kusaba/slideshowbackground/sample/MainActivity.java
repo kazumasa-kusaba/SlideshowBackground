@@ -60,13 +60,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        final int seekBarMax = 20;
+        final int seekBarMin = -20;
+        final int seekBarDefault = 5;
         SeekBar seekBarSpeed = this.findViewById(R.id.seekBarFlowSpeed);
-        seekBarSpeed.setProgress(5);
-        seekBarSpeed.setMax(20);
+        seekBarSpeed.setProgress(seekBarDefault - seekBarMin);
+        seekBarSpeed.setMax(seekBarMax - seekBarMin);
         seekBarSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                slideshowBackground.setFlowSpeed(progress);
+                slideshowBackground.setFlowSpeed(progress + seekBarMin);
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) { }

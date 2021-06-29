@@ -194,62 +194,80 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
         }
     }
 
-    // TODO: refactor the following methods
-    //       * addImagesToScreenWhileRightFlow
-    //       * addImagesToScreenWhileLeftFlow
-
-    // TODO: fix the following methods
-    //       if the flow direction is changed, an error occurs
-    //       the methods can not add images properly
-
     private void addImagesToScreenWhileRightFlow() {
-        int edgeXPosOfImages;
+        int leftOfLeftmostImage;
         if (imageOnScreenList.size() == 0) {
-            edgeXPosOfImages = context.getResources().getDisplayMetrics().widthPixels;
+            leftOfLeftmostImage = context.getResources().getDisplayMetrics().widthPixels;
         }
         else {
-            ImageOnScreen lastImageOnScreen = imageOnScreenList.get(imageOnScreenList.size() - 1);
-            edgeXPosOfImages = lastImageOnScreen.rect.left;
+            leftOfLeftmostImage = getLeftOfLeftmostImage();
         }
 
-        while (0 < edgeXPosOfImages) {
+        while (0 < leftOfLeftmostImage) {
             Random random = new Random();
             int randomVal = random.nextInt(resourceInfoList.size());
             ImageOnScreen imageOnScreen = new ImageOnScreen();
             imageOnScreen.bitmap = BitmapFactory.decodeResource(resourceInfoList.get(randomVal).resources, resourceInfoList.get(randomVal).resourceId);
             imageOnScreen.rect.top = 0;
             imageOnScreen.rect.bottom = context.getResources().getDisplayMetrics().heightPixels;
+            imageOnScreen.rect.right = leftOfLeftmostImage;
             imageOnScreen.rect.left = imageOnScreen.rect.right - (int)(imageOnScreen.bitmap.getWidth() * ((float)imageOnScreen.rect.bottom) / imageOnScreen.bitmap.getHeight());
-            imageOnScreen.rect.right = edgeXPosOfImages;
             imageOnScreenList.add(imageOnScreen);
             ImageOnScreen lastImageOnScreen = imageOnScreenList.get(imageOnScreenList.size() - 1);
-            edgeXPosOfImages = lastImageOnScreen.rect.left;
+            leftOfLeftmostImage = lastImageOnScreen.rect.left;
         }
     }
 
-    private void addImagesToScreenWhileLeftFlow() {
-        int edgeXPosOfImages;
-        if (imageOnScreenList.size() == 0) {
-            edgeXPosOfImages = 0;
-        }
-        else {
-            ImageOnScreen lastImageOnScreen = imageOnScreenList.get(imageOnScreenList.size() - 1);
-            edgeXPosOfImages = lastImageOnScreen.rect.right;
+    private int getLeftOfLeftmostImage() {
+        int leftOfLeftmostImage = context.getResources().getDisplayMetrics().widthPixels;
+        Iterator<ImageOnScreen> imageOnScreenIterator = imageOnScreenList.iterator();
+
+        while (imageOnScreenIterator.hasNext()){
+            ImageOnScreen imageOnScreen = imageOnScreenIterator.next();
+            if (imageOnScreen.rect.left < leftOfLeftmostImage) {
+                leftOfLeftmostImage = imageOnScreen.rect.left;
+            }
         }
 
-        while (edgeXPosOfImages < context.getResources().getDisplayMetrics().widthPixels) {
+        return leftOfLeftmostImage;
+    }
+
+    private void addImagesToScreenWhileLeftFlow() {
+        int rightOfRightmostImage;
+        if (imageOnScreenList.size() == 0) {
+            rightOfRightmostImage = 0;
+        }
+        else {
+            rightOfRightmostImage = getRightOfRightmostImage();
+        }
+
+        while (rightOfRightmostImage < context.getResources().getDisplayMetrics().widthPixels) {
             Random random = new Random();
             int randomVal = random.nextInt(resourceInfoList.size());
             ImageOnScreen imageOnScreen = new ImageOnScreen();
             imageOnScreen.bitmap = BitmapFactory.decodeResource(resourceInfoList.get(randomVal).resources, resourceInfoList.get(randomVal).resourceId);
-            imageOnScreen.rect.left = edgeXPosOfImages;
+            imageOnScreen.rect.left = rightOfRightmostImage;
             imageOnScreen.rect.top = 0;
             imageOnScreen.rect.bottom = context.getResources().getDisplayMetrics().heightPixels;
             imageOnScreen.rect.right = imageOnScreen.rect.left + (int)(imageOnScreen.bitmap.getWidth() * ((float)imageOnScreen.rect.bottom) / imageOnScreen.bitmap.getHeight());
             imageOnScreenList.add(imageOnScreen);
             ImageOnScreen lastImageOnScreen = imageOnScreenList.get(imageOnScreenList.size() - 1);
-            edgeXPosOfImages = lastImageOnScreen.rect.right;
+            rightOfRightmostImage = lastImageOnScreen.rect.right;
         }
+    }
+
+    private int getRightOfRightmostImage() {
+        int rightOfRighttmostImage = 0;
+        Iterator<ImageOnScreen> imageOnScreenIterator = imageOnScreenList.iterator();
+
+        while (imageOnScreenIterator.hasNext()){
+            ImageOnScreen imageOnScreen = imageOnScreenIterator.next();
+            if (rightOfRighttmostImage < imageOnScreen.rect.right) {
+                rightOfRighttmostImage = imageOnScreen.rect.right;
+            }
+        }
+
+        return rightOfRighttmostImage;
     }
 
     private void deleteImagesOnScreen() {
