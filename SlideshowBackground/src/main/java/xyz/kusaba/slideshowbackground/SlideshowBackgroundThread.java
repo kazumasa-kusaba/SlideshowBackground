@@ -194,10 +194,6 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
         }
     }
 
-    // TODO: refactor the following methods
-    //       * addImagesToScreenWhileRightFlow
-    //       * addImagesToScreenWhileLeftFlow
-
     // TODO: fix the following methods
     //       if the flow direction is changed, an error occurs
     //       the methods can not add images properly
@@ -219,8 +215,8 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
             imageOnScreen.bitmap = BitmapFactory.decodeResource(resourceInfoList.get(randomVal).resources, resourceInfoList.get(randomVal).resourceId);
             imageOnScreen.rect.top = 0;
             imageOnScreen.rect.bottom = context.getResources().getDisplayMetrics().heightPixels;
-            imageOnScreen.rect.left = imageOnScreen.rect.right - (int)(imageOnScreen.bitmap.getWidth() * ((float)imageOnScreen.rect.bottom) / imageOnScreen.bitmap.getHeight());
             imageOnScreen.rect.right = edgeXPosOfImages;
+            imageOnScreen.rect.left = imageOnScreen.rect.right - (int)(imageOnScreen.bitmap.getWidth() * ((float)imageOnScreen.rect.bottom) / imageOnScreen.bitmap.getHeight());
             imageOnScreenList.add(imageOnScreen);
             ImageOnScreen lastImageOnScreen = imageOnScreenList.get(imageOnScreenList.size() - 1);
             edgeXPosOfImages = lastImageOnScreen.rect.left;
