@@ -33,6 +33,7 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
     private int speed = 5;
     private boolean isRandomPlayback = false;
     private boolean isFlowing = false;
+    private boolean isResetRequired = false;
     private int imageOnScreenListIndex = 0;
     private List<ImageOnScreen> imageOnScreenList = new ArrayList<ImageOnScreen>();
 
@@ -103,10 +104,13 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
     public void run() {
         while (true) {
             synchronized (this) {
-                if (!isFlowing) {
-                    continue;
+                if (isResetRequired) {
+                    clearScreen();
+                    isResetRequired = false;
                 }
-                threadAction();
+                if (isFlowing) {
+                    moveImagesOnScreen();
+                }
             }
         }
     }
@@ -148,7 +152,7 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
                     case MSG_WHAT_STOP:
                         synchronized (this) {
                             isFlowing = false;
-                            // TODO: write the process to reset view
+                            isResetRequired = true;
                         }
                         break;
                     default:
@@ -158,7 +162,12 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
         };
     }
 
-    private void threadAction() {
+    private void clearScreen() {
+        imageOnScreenList.clear();
+        updateScreen();
+    }
+
+    private void moveImagesOnScreen() {
         try {
             slideImages();
             addImagesToScreen();

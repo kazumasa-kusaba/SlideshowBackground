@@ -44,6 +44,7 @@ public class SlideshowBackground extends SurfaceView {
     public void stop() {
         slideshowBackgroundThread.requestStop();
     }
+
     private void init() {
         slideshowBackgroundThread.setContext(this.getContext());
         slideshowBackgroundThread.setSurfaceHolder(getHolder());
