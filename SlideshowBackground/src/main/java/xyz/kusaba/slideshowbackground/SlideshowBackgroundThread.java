@@ -179,16 +179,11 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
     }
 
     private void slideImages() {
-        if (imageOnScreenList.size() == 0) {
-            // if images are not registered, nothing to do.
-            return;
-        }
-        // MEMO: can this code use iterator?
-        for (int i = 0; i < imageOnScreenList.size(); i++) {
-            ImageOnScreen imageOnScreen = imageOnScreenList.get(i);
+        Iterator<ImageOnScreen> imageOnScreenIterator = imageOnScreenList.iterator();
+        while (imageOnScreenIterator.hasNext()) {
+            ImageOnScreen imageOnScreen = imageOnScreenIterator.next();
             imageOnScreen.rect.left += speed;
             imageOnScreen.rect.right += speed;
-            imageOnScreenList.set(i, imageOnScreen);
         }
     }
 
