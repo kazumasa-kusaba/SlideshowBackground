@@ -102,7 +102,10 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
 
     @Override
     public void run() {
+        long startTimeMillis = 0;
+
         while (true) {
+            startTimeMillis = System.currentTimeMillis();
             synchronized (this) {
                 if (isResetRequired) {
                     clearScreen();
@@ -112,6 +115,7 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
                     moveImagesOnScreen();
                 }
             }
+            adjustFrame(System.currentTimeMillis() - startTimeMillis);
         }
     }
 
@@ -168,15 +172,10 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
     }
 
     private void moveImagesOnScreen() {
-        try {
-            slideImages();
-            addImagesToScreen();
-            deleteImagesOnScreen();
-            updateScreen();
-            Thread.sleep(16); // 60fps
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        slideImages();
+        addImagesToScreen();
+        deleteImagesOnScreen();
+        updateScreen();
     }
 
     private void slideImages() {
@@ -325,5 +324,19 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
         }
 
         surfaceHolder.unlockCanvasAndPost(canvas);
+    }
+
+    void adjustFrame(long timePerLoop) {
+        //long targetWaitTime = 16;  // 60fps
+        long targetWaitTime = 33;  // 30fps
+        long waitTime = targetWaitTime - timePerLoop;
+        if (waitTime <= 0) {
+            return;
+        }
+        try {
+            Thread.sleep(waitTime);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
