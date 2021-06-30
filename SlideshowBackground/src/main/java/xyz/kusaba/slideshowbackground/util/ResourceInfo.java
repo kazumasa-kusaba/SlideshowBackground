@@ -1,4 +1,4 @@
-package xyz.kusaba.slideshowbackground;
+package xyz.kusaba.slideshowbackground.util;
 
 import android.content.res.Resources;
 

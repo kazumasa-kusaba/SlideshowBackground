@@ -1,4 +1,4 @@
-package xyz.kusaba.slideshowbackground;
+package xyz.kusaba.slideshowbackground.thread;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+
+import xyz.kusaba.slideshowbackground.util.ImageOnScreen;
+import xyz.kusaba.slideshowbackground.util.ResourceInfo;
 
 public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callback{
     private static final int MSG_WHAT_APPEND_IMAGE = 0;

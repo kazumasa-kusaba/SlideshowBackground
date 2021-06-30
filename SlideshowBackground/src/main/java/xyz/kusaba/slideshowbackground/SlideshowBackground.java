@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
 
+import xyz.kusaba.slideshowbackground.thread.SlideshowBackgroundThread;
+
 public class SlideshowBackground extends SurfaceView {
     private SlideshowBackgroundThread slideshowBackgroundThread = new SlideshowBackgroundThread();
 
