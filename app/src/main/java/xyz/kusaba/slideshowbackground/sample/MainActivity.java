@@ -60,8 +60,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final int seekBarMax = 20;
-        final int seekBarMin = -20;
+        final int seekBarMax = 15;
+        final int seekBarMin = -15;
         final int seekBarDefault = 5;
         SeekBar seekBarSpeed = this.findViewById(R.id.seekBarFlowSpeed);
         seekBarSpeed.setProgress(seekBarDefault - seekBarMin);
