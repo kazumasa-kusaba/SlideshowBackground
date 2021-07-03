@@ -27,8 +27,8 @@ public class SlideshowBackground extends SurfaceView {
         slideshowBackgroundThread.requestAppend(resources, resourceId);
     }
 
-    public void setFlowSpeed(int pixel) {
-        slideshowBackgroundThread.requestSetFlowSpeed(pixel);
+    public void setFlowingSpeed(int pixel) {
+        slideshowBackgroundThread.requestSetFlowingSpeed(pixel);
     }
 
     public void setRandomPlayback(boolean isRandom) {

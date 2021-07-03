@@ -22,7 +22,7 @@ import xyz.kusaba.slideshowbackground.util.ResourceInfo;
 
 public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callback{
     private static final int MSG_WHAT_APPEND_IMAGE = 0;
-    private static final int MSG_WHAT_SET_FLOW_SPEED = 1;
+    private static final int MSG_WHAT_SET_FLOWING_SPEED = 1;
     private static final int MSG_WHAT_SET_RANDOM_PLAYBACK = 2;
     private static final int MSG_WHAT_PLAY = 3;
     private static final int MSG_WHAT_PAUSE = 4;
@@ -71,9 +71,9 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
         handler.sendMessage(msg);
     }
 
-    public void requestSetFlowSpeed(int pixel) {
+    public void requestSetFlowingSpeed(int pixel) {
         Message msg = Message.obtain();
-        msg.what = MSG_WHAT_SET_FLOW_SPEED;
+        msg.what = MSG_WHAT_SET_FLOWING_SPEED;
         msg.obj = (Object)pixel;
         handler.sendMessage(msg);
     }
@@ -134,7 +134,7 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
                             resourceInfoList.add(resourceInfo);
                         }
                         break;
-                    case MSG_WHAT_SET_FLOW_SPEED:
+                    case MSG_WHAT_SET_FLOWING_SPEED:
                         synchronized (this) {
                             int pixel = (int) msg.obj;
                             speed = pixel;
@@ -191,17 +191,17 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
     }
 
     private void addImagesToScreen() {
-        // right flow
+        // right flowing
         if (speed > 0) {
-            addImagesToScreenWhileRightFlow();
+            addImagesToScreenWhileRightFlowing();
         }
-        // left flow
+        // left flowing
         else if (speed < 0) {
-            addImagesToScreenWhileLeftFlow();
+            addImagesToScreenWhileLeftFlowing();
         }
     }
 
-    private void addImagesToScreenWhileRightFlow() {
+    private void addImagesToScreenWhileRightFlowing() {
         int leftOfLeftmostImage;
         if (imageOnScreenList.size() == 0) {
             leftOfLeftmostImage = context.getResources().getDisplayMetrics().widthPixels;
@@ -246,7 +246,7 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
         return leftOfLeftmostImage;
     }
 
-    private void addImagesToScreenWhileLeftFlow() {
+    private void addImagesToScreenWhileLeftFlowing() {
         int rightOfRightmostImage;
         if (imageOnScreenList.size() == 0) {
             rightOfRightmostImage = 0;
@@ -295,11 +295,11 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
         Iterator<ImageOnScreen> imageOnScreenIterator = imageOnScreenList.iterator();
         while (imageOnScreenIterator.hasNext()){
             ImageOnScreen imageOnScreen = imageOnScreenIterator.next();
-            // right flow
+            // right flowing
             if (0 < speed && context.getResources().getDisplayMetrics().widthPixels < imageOnScreen.rect.left) {
                 imageOnScreenIterator.remove();
             }
-            // left flow
+            // left flowing
             else if (speed < 0 && imageOnScreen.rect.right < 0) {
                 imageOnScreenIterator.remove();
             }
