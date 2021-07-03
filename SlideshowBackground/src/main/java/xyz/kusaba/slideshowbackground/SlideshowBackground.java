@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
 
+import xyz.kusaba.slideshowbackground.thread.SlideshowBackgroundThread;
+
 public class SlideshowBackground extends SurfaceView {
     private SlideshowBackgroundThread slideshowBackgroundThread = new SlideshowBackgroundThread();
 
@@ -25,8 +27,8 @@ public class SlideshowBackground extends SurfaceView {
         slideshowBackgroundThread.requestAppend(resources, resourceId);
     }
 
-    public void setFlowSpeed(int pixel) {
-        slideshowBackgroundThread.requestSetFlowSpeed(pixel);
+    public void setFlowingSpeed(int pixel) {
+        slideshowBackgroundThread.requestSetFlowingSpeed(pixel);
     }
 
     public void setRandomPlayback(boolean isRandom) {
