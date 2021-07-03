@@ -213,8 +213,7 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
         while (0 < leftOfLeftmostImage) {
             if (isRandomPlayback) {
                 Random random = new Random();
-                int randomVal = random.nextInt(resourceInfoList.size());
-                imageOnScreenListIndex = randomVal;
+                imageOnScreenListIndex = random.nextInt(resourceInfoList.size());
             } else {
                 imageOnScreenListIndex++;
                 if (resourceInfoList.size() <= imageOnScreenListIndex) {
@@ -259,8 +258,7 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
         while (rightOfRightmostImage < context.getResources().getDisplayMetrics().widthPixels) {
             if (isRandomPlayback) {
                 Random random = new Random();
-                int randomVal = random.nextInt(resourceInfoList.size());
-                imageOnScreenListIndex = randomVal;
+                imageOnScreenListIndex = random.nextInt(resourceInfoList.size());
             } else {
                 imageOnScreenListIndex++;
                 if (resourceInfoList.size() <= imageOnScreenListIndex) {
