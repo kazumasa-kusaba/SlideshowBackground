@@ -1,5 +1,7 @@
 plugins {
     id 'com.android.library'
+    id 'maven-publish'
+    id 'signing'
 }
 
 android {
@@ -26,6 +28,64 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+}
+
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId = 'io.github.kazumasa-kusaba'
+            artifactId = 'SlideshowBackground'
+            version = android.defaultConfig.versionName
+            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+
+            pom {
+                name = 'SlideshowBackground'
+                description = 'An Android library for running slideshow in the background.'
+                url = 'https://github.com/kazumasa-kusaba/SlideshowBackground'
+                licenses {
+                    license {
+                        name = 'The MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+                developers {
+                    developer {
+                        name = 'Kazumasa Kusaba'
+                        email = 'kazumasa@mail.kusaba.xyz'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/kazumasa-kusaba/SlideshowBackground.git'
+                    url = 'https://github.com/kazumasa-kusaba/SlideshowBackground'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+            def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                def properties = new Properties()
+                File fileLocalProperties = file('./local.properties')
+                if (fileLocalProperties.exists()) {
+                    properties.load(fileLocalProperties.newDataInputStream())
+                    username = properties.getProperty("ossrhUsername")
+                    password = properties.getProperty("ossrhPassword")
+                }
+                else {
+                    username = null
+                    password = null
+                }
+            }
+        }
+    }
+}
+
+signing {
+    useGpgCmd()
+    sign publishing.publications.aar
 }
 
 dependencies {
