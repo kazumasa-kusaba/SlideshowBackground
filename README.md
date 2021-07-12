@@ -30,7 +30,7 @@ slideshowBackground.append(this.getResources(), R.drawable.sample_picture_01);
 slideshowBackground.append(this.getResources(), R.drawable.sample_picture_02);
 
 // set speed in pixels
-//  · set how far the images move at 30fps
+//  · set how far the images move at 30fps.
 //  · if you choose a negative value, the images will flow to the left.
 //  · no speed limit is defined, but speed between -10 and 10 is best.
 slideshowBackground.setFlowingSpeed(5);
@@ -44,6 +44,7 @@ slideshowBackground.setRandomPlayback(true);
 // play slide show
 slideshowBackground.play();
 ```
+* There is no problem to set the speed and random playback while slide show is playing.
 
 ### How to pause slide show
 ```java
