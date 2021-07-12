@@ -4,6 +4,13 @@ An Android library for running slideshow in the background.
 ![slideshowbackground_screenshot_00](https://user-images.githubusercontent.com/17498982/125302862-4f822d00-e367-11eb-8d3d-0653b23b223e.gif)
 <br>
 Try running the sample program under the app folder.  
+
+# Features
+* can play any pre-added image
+* can play left and right at any speed you like
+* can pause and stop
+* random playback is possible
+
 # Usage
 
 ## 1. Write in Gradle
