@@ -26,7 +26,7 @@ implementation 'io.github.kazumasa-kusaba:SlideshowBackground:1.0'
     android:layout_height="match_parent" />
 ```
 
-## 3. Set up and play slideshow
+## 3. Set up and play slide show
 ### How to play slide show
 ```java
 // retrieve the widget
