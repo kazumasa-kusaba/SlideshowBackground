@@ -1,5 +1,6 @@
 # SlideshowBackground
 An Android library for running slideshow in the background.  
+![slideshowbackground_screenshot_00](https://user-images.githubusercontent.com/17498982/125302862-4f822d00-e367-11eb-8d3d-0653b23b223e.gif)
 
 # Usage
 
