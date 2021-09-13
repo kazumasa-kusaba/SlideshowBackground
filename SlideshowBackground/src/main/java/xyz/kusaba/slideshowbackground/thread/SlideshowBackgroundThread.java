@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Size;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.NonNull;
@@ -39,6 +40,8 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
     private boolean isResetRequired = false;
     private int imageOnScreenListIndex = 0;
     private List<ImageOnScreen> imageOnScreenList = new ArrayList<ImageOnScreen>();
+    private int canvasWidth = 0;
+    private int canvasHeight = 0;
 
     public SlideshowBackgroundThread() {
         initHandler();
@@ -106,6 +109,8 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
     @Override
     public void run() {
         long startTimeMillis = 0;
+
+        updateCanvasSize();
 
         while (true) {
             startTimeMillis = System.currentTimeMillis();
@@ -181,6 +186,18 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
         updateScreen();
     }
 
+    private void updateCanvasSize() {
+        Canvas canvas = surfaceHolder.lockCanvas();
+        if (canvas == null) {
+            return;
+        }
+
+        canvasWidth = canvas.getWidth();
+        canvasHeight = canvas.getHeight();
+
+        surfaceHolder.unlockCanvasAndPost(canvas);
+    }
+
     private void slideImages() {
         Iterator<ImageOnScreen> imageOnScreenIterator = imageOnScreenList.iterator();
         while (imageOnScreenIterator.hasNext()) {
@@ -204,7 +221,7 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
     private void addImagesToScreenWhileRightFlowing() {
         int leftOfLeftmostImage;
         if (imageOnScreenList.size() == 0) {
-            leftOfLeftmostImage = context.getResources().getDisplayMetrics().widthPixels;
+            leftOfLeftmostImage = canvasWidth;
         }
         else {
             leftOfLeftmostImage = getLeftOfLeftmostImage();
@@ -223,7 +240,7 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
             ImageOnScreen imageOnScreen = new ImageOnScreen();
             imageOnScreen.bitmap = BitmapFactory.decodeResource(resourceInfoList.get(imageOnScreenListIndex).resources, resourceInfoList.get(imageOnScreenListIndex).resourceId);
             imageOnScreen.rect.top = 0;
-            imageOnScreen.rect.bottom = context.getResources().getDisplayMetrics().heightPixels;
+            imageOnScreen.rect.bottom = canvasHeight;
             imageOnScreen.rect.right = leftOfLeftmostImage;
             imageOnScreen.rect.left = imageOnScreen.rect.right - (int)(imageOnScreen.bitmap.getWidth() * ((float)imageOnScreen.rect.bottom) / imageOnScreen.bitmap.getHeight());
             imageOnScreenList.add(imageOnScreen);
@@ -233,7 +250,7 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
     }
 
     private int getLeftOfLeftmostImage() {
-        int leftOfLeftmostImage = context.getResources().getDisplayMetrics().widthPixels;
+        int leftOfLeftmostImage = canvasWidth;
         Iterator<ImageOnScreen> imageOnScreenIterator = imageOnScreenList.iterator();
 
         while (imageOnScreenIterator.hasNext()){
@@ -255,7 +272,7 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
             rightOfRightmostImage = getRightOfRightmostImage();
         }
 
-        while (rightOfRightmostImage < context.getResources().getDisplayMetrics().widthPixels) {
+        while (rightOfRightmostImage < canvasWidth) {
             if (isRandomPlayback) {
                 Random random = new Random();
                 imageOnScreenListIndex = random.nextInt(resourceInfoList.size());
@@ -269,7 +286,7 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
             imageOnScreen.bitmap = BitmapFactory.decodeResource(resourceInfoList.get(imageOnScreenListIndex).resources, resourceInfoList.get(imageOnScreenListIndex).resourceId);
             imageOnScreen.rect.left = rightOfRightmostImage;
             imageOnScreen.rect.top = 0;
-            imageOnScreen.rect.bottom = context.getResources().getDisplayMetrics().heightPixels;
+            imageOnScreen.rect.bottom = canvasHeight;
             imageOnScreen.rect.right = imageOnScreen.rect.left + (int)(imageOnScreen.bitmap.getWidth() * ((float)imageOnScreen.rect.bottom) / imageOnScreen.bitmap.getHeight());
             imageOnScreenList.add(imageOnScreen);
             ImageOnScreen lastImageOnScreen = imageOnScreenList.get(imageOnScreenList.size() - 1);
@@ -296,7 +313,7 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
         while (imageOnScreenIterator.hasNext()){
             ImageOnScreen imageOnScreen = imageOnScreenIterator.next();
             // right flowing
-            if (0 < speed && context.getResources().getDisplayMetrics().widthPixels < imageOnScreen.rect.left) {
+            if (0 < speed && canvasWidth < imageOnScreen.rect.left) {
                 imageOnScreenIterator.remove();
             }
             // left flowing
@@ -318,6 +335,9 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
             ImageOnScreen imageOnScreen = imageOnScreenIterator.next();
             canvas.drawBitmap(imageOnScreen.bitmap, null, imageOnScreen.rect, null);
         }
+
+        canvasWidth = canvas.getWidth();
+        canvasHeight = canvas.getHeight();
 
         surfaceHolder.unlockCanvasAndPost(canvas);
     }
