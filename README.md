@@ -15,7 +15,7 @@ Try running the sample program under the app folder.
 
 ## 1. Write in Gradle
 ```gradle
-implementation 'io.github.kazumasa-kusaba:SlideshowBackground:1.1'
+implementation 'io.github.kazumasa-kusaba:SlideshowBackground:1.2'
 ```
 
 ## 2. Write in XML Layout
