@@ -45,12 +45,14 @@ public class SlideshowBackgroundThread implements Runnable, SurfaceHolder.Callba
 
     public SlideshowBackgroundThread() {
         initHandler();
-        thread.start();
     }
 
     public void setSurfaceHolder(SurfaceHolder surfaceHolder) {
-        this.surfaceHolder = surfaceHolder;
-        this.surfaceHolder.addCallback(this);
+        if (surfaceHolder != null) {
+            this.surfaceHolder = surfaceHolder;
+            this.surfaceHolder.addCallback(this);
+            thread.start();
+        }
     }
 
     public void setContext(Context context) {
