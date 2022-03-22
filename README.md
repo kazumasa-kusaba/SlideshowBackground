@@ -15,7 +15,7 @@ Try running the sample program under the app folder.
 
 ## 1. Write in Gradle
 ```gradle
-implementation 'io.github.kazumasa-kusaba:SlideshowBackground:1.2'
+implementation 'io.github.kazumasa-kusaba:SlideshowBackground:1.3'
 ```
 
 ## 2. Write in XML Layout
@@ -70,7 +70,7 @@ slideshowBackground.stop();
 ```
 MIT License
 
-Copyright (c) 2021 Kazumasa Kusaba
+Copyright (c) 2022 Kazumasa Kusaba
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
